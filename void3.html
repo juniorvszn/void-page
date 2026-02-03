@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VOID'</title>
+  <style>
+    :root{
+      --black:#0a0a0a;
+      --red:#e10600;
+      --red-glow: rgba(225,6,0,.55);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: radial-gradient(1200px 600px at 10% 10%, #160000, transparent 60%),
+                  radial-gradient(800px 400px at 90% 90%, #1a0000, transparent 60%),
+                  linear-gradient(180deg, #050505, #0b0000);
+      color:#f2f2f2;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+      mix-blend-mode: overlay;
+      pointer-events:none;
+      animation: scan 8s linear infinite;
+    }
+    @keyframes scan{from{background-position:0 0} to{background-position:0 400px}}
+
+    header{
+      padding:48px 24px 16px;
+      text-align:center;
+      position:relative;
+    }
+
+    .title{
+      font-size: clamp(48px, 10vw, 120px);
+      letter-spacing: .2em;
+      font-weight: 900;
+      color: #000;
+      text-shadow:
+        0 0 12px var(--red-glow),
+        0 0 32px var(--red-glow);
+      position:relative;
+      display:inline-block;
+      animation: pulse 2.8s ease-in-out infinite;
+    }
+    .title::before,
+    .title::after{
+      content: attr(data-text);
+      position:absolute; inset:0;
+      color:#000;
+      text-shadow: 0 0 18px var(--red-glow);
+      clip-path: inset(0 0 0 0);
+      opacity:.8;
+    }
+    .title::before{ transform: translate(2px, -2px); animation: glitch 2.2s infinite; }
+    .title::after{ transform: translate(-2px, 2px); animation: glitch 1.6s infinite reverse; }
+    @keyframes glitch{
+      0%{clip-path: inset(0 0 85% 0)}
+      10%{clip-path: inset(15% 0 60% 0)}
+      20%{clip-path: inset(30% 0 40% 0)}
+      30%{clip-path: inset(45% 0 30% 0)}
+      40%{clip-path: inset(10% 0 70% 0)}
+      50%{clip-path: inset(0 0 0 0)}
+      100%{clip-path: inset(0 0 0 0)}
+    }
+    @keyframes pulse{0%,100%{filter:drop-shadow(0 0 0 var(--red))}50%{filter:drop-shadow(0 0 18px var(--red))}}
+
+    main{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:24px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, #0b0b0b, #070000);
+      border:1px solid rgba(225,6,0,.25);
+      border-radius: 18px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6), inset 0 0 40px rgba(225,6,0,.08);
+      padding: 20px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::after{
+      content:"";
+      position:absolute; inset:auto -40% -40% auto;
+      width:80%; height:80%;
+      background: radial-gradient(closest-side, rgba(225,6,0,.18), transparent 70%);
+      transform: rotate(20deg);
+      pointer-events:none;
+    }
+
+    h2{margin:0 0 12px; letter-spacing:.08em}
+
+    form{
+      display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;
+    }
+    @media (max-width:800px){ form{grid-template-columns: 1fr 1fr} }
+    @media (max-width:480px){ form{grid-template-columns: 1fr} }
+
+    input, select, button{
+      background:#0a0a0a;
+      border:1px solid rgba(225,6,0,.35);
+      color:#f2f2f2;
+      padding:12px 14px;
+      border-radius:12px;
+      outline:none;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    input:focus, select:focus{ border-color: var(--red); box-shadow: 0 0 0 3px rgba(225,6,0,.15) }
+    button{
+      cursor:pointer;
+      background: linear-gradient(180deg, #140000, #070000);
+      font-weight:700;
+      letter-spacing:.08em;
+    }
+    button:hover{ transform: translateY(-1px); box-shadow: 0 6px 18px rgba(225,6,0,.35) }
+
+    table{
+      width:100%; border-collapse: collapse; margin-top:10px;
+    }
+    th, td{ padding:12px; border-bottom:1px solid rgba(225,6,0,.2) }
+    th{ text-align:left; letter-spacing:.08em; color:#ffb3b3 }
+    tr:hover td{ background: rgba(225,6,0,.06) }
+
+    .actions{ display:flex; gap:8px }
+    .danger{ border-color:#ff4d4d; color:#ffdada }
+
+    footer{ opacity:.7; text-align:center; padding:16px }
+
+    .video-preview{ margin-top:12px; width:100%; border-radius:12px; overflow:hidden; }
+    .video-preview video{ width:100%; display:block; border-radius:12px; }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title" data-text="VOID'">VOID'</div>
+  </header>
+
+  <main>
+    <!-- Verification Section -->
+    <section class="card" id="accessCard">
+      <h2>Vérification</h2>
+      <p>Cliquer sur "Je suis humain" pour accéder au formulaire :</p>
+      <button id="verifyBtn">Je suis humain</button>
+    </section>
+
+    <!-- Form Section -->
+    <section class="card" id="purchaseSection" style="display:none;">
+      <h2>ENREGISTRER DES ACHATS</h2>
+      <form id="purchaseForm">
+        <select required id="product">
+          <option value="" disabled selected>Choisir un produit</option>
+          <option value="PACK OPTIMIZE 1.1">PACK OPTIMIZE 1.1</option>
+          <option value="PACK OPTIMIZE 1.2">PACK OPTIMIZE 1.2</option>
+          <option value="REGEDIT 1">REGEDIT 1</option>
+        </select>
+        <input required placeholder="Catégorie" id="category" />
+        <input required type="number" min="0" step="0.01" placeholder="Prix" id="price" readonly />
+        <input required type="date" id="date" />
+        <button type="submit">AJOUTER</button>
+      </form>
+      <div class="video-preview" id="videoPreview"></div>
+    </section>
+
+    <section class="card">
+      <h2>HISTORIQUE</h2>
+      <table>
+        <thead>
+          <tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Date</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>VOID' © cyber black / red</footer>
+
+  <script>
+    const verifyBtn = document.getElementById('verifyBtn');
+    const accessCard = document.getElementById('accessCard');
+    const purchaseSection = document.getElementById('purchaseSection');
+
+    verifyBtn.addEventListener('click', ()=>{
+      accessCard.style.display = 'none';
+      purchaseSection.style.display = 'block';
+    });
+
+    const product = document.getElementById('product');
+    const category = document.getElementById('category');
+    const price = document.getElementById('price');
+    const videoPreview = document.getElementById('videoPreview');
+
+    const productData = {
+      'PACK OPTIMIZE 1.1': { price: 49.99, video: 'videos/pack1.mp4' },
+      'PACK OPTIMIZE 1.2': { price: 69.99, video: 'videos/pack2.mp4' },
+      'REGEDIT 1': { price: 29.99, video: 'videos/regedit1.mp4' }
+    };
+
+    product.addEventListener('change', ()=>{
+      const p = productData[product.value];
+      if(p){
+        price.value = p.price;
+        videoPreview.innerHTML = `<video controls src="${p.video}"></video>`;
+      } else {
+        price.value = '';
+        videoPreview.innerHTML = '';
+      }
+    });
+
+    const form = document.getElementById('purchaseForm');
+    const rows = document.getElementById('rows');
+    const KEY = 'void_purchases';
+
+    const load = () => JSON.parse(localStorage.getItem(KEY) || '[]');
+    const save = (data) => localStorage.setItem(KEY, JSON.stringify(data));
+
+    function render(){
+      const data = load();
+      rows.innerHTML = '';
+      data.forEach((p, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.product}</td>
+          <td>${p.category}</td>
+          <td>${Number(p.price).toFixed(2)}</td>
+          <td>${p.date}</td>
+          <td class="actions">
+            <button class="danger" data-i="${i}">SUPPRIMER</button>
+          </td>`;
+        rows.appendChild(tr);
+      });
+      rows.querySelectorAll('.danger').forEach(btn=>{
+        btn.onclick = () => { const d = load(); d.splice(btn.dataset.i,1); save(d); render(); };
+      });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const data = load();
+      data.push({
+        product: product.value,
+        category: category.value,
+        price: price.value,
+        date: date.value
+      });
+      save(data);
+      form.reset();
+      price.value='';
+      videoPreview.innerHTML='';
+      render();
+    });
+
+    document.getElementById('date').valueAsDate = new Date();
+    render();
+  </script>
+</body>
+</html>
