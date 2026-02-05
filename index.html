@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>void'</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    /* ================= GLOBAL ================= */
+    *{box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+    body{
+      margin:0;
+      background:black;
+      color:#ff1a1a;
+      overflow:hidden;
+    }
+
+    /* ================= ANIMATIONS ================= */
+    @keyframes glitch{
+      0%{text-shadow:2px 0 red}
+      20%{text-shadow:-2px 0 crimson}
+      40%{text-shadow:2px 2px red}
+      60%{text-shadow:-2px -2px darkred}
+      100%{text-shadow:2px 0 red}
+    }
+
+    @keyframes scan{
+      0%{background-position:0 0}
+      100%{background-position:0 100%}
+    }
+
+    @keyframes fadeDark{
+      from{opacity:0}
+      to{opacity:1}
+    }
+
+    .scanlines::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:repeating-linear-gradient(
+        to bottom,
+        rgba(255,0,0,.08) 0px,
+        rgba(0,0,0,0) 3px,
+        rgba(0,0,0,0) 6px
+      );
+      animation:scan 6s linear infinite;
+      pointer-events:none;
+      z-index:999;
+    }
+
+    /* ================= HEADER ================= */
+    header{
+      padding:15px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid #330000;
+    }
+
+    .logo{
+      font-size:34px;
+      animation:glitch 1.3s infinite;
+    }
+
+    .by{
+      font-size:14px;
+      opacity:.8;
+    }
+
+    /* ================= SECTIONS ================= */
+    .section{
+      min-height:100vh;
+      display:none;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      text-align:center;
+      padding:20px;
+    }
+
+    .section.active{display:flex}
+
+    /* ================= FORMS ================= */
+    input,select,button{
+      width:280px;
+      padding:12px;
+      margin:10px 0;
+      background:black;
+      color:#ff1a1a;
+      border:1px solid #ff1a1a;
+      outline:none;
+    }
+
+    button{
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    button:hover{
+      background:#ff1a1a;
+      color:black;
+    }
+
+    .price{
+      margin-top:15px;
+      font-size:22px;
+      display:none;
+    }
+
+    /* ================= OVERLAY ================= */
+    #overlay{
+      position:fixed;
+      inset:0;
+      background:black;
+      display:none;
+      animation:fadeDark 3s forwards;
+      z-index:50;
+    }
+
+    footer{
+      position:fixed;
+      right:15px;
+      bottom:15px;
+      z-index:100;
+    }
+
+    footer a{
+      color:#ff1a1a;
+      text-decoration:none;
+      border:1px solid #ff1a1a;
+      padding:10px 14px;
+      font-size:13px;
+      background:black;
+      animation:glitch 1.8s infinite;
+      transition:.3s;
+    }
+
+    footer a:hover{
+      background:#ff1a1a;
+      color:black;
+    }
+
+</style>
+</head>
+<body class="scanlines">
+
+<header>
+  <div class="logo">void'</div>
+  <div class="by">By vøid.𝕵unior</div>
+</header>
+
+<!-- STEP 1 : HUMAN VERIFY -->
+<section class="section active" id="human">
+  <h2>Human Verification</h2>
+  <p>Confirm that you are not a bot</p>
+  <button onclick="humanCheck()">I am not a bot</button>
+</section>
+
+<!-- STEP 2 : USER INFO -->
+<section class="section" id="userinfo">
+  <h2>Personal Information</h2>
+  <input id="fullname" placeholder="Full Name (required)">
+  <input id="discord" placeholder="Discord Username (required)">
+  <input id="birthday" type="date">
+  <button onclick="verifyUser()">Continue</button>
+</section>
+
+<!-- STEP 3 : SHOP -->
+<section class="section" id="shop">
+  <h2>ENREGISTRER DES ACHATS</h2>
+
+  <select id="product" onchange="updatePrice()">
+    <option value="">Select Product</option>
+    <option>PACK OPTIMIZE 1.1</option>
+    <option>PACK OPTIMIZE 1.2</option>
+    <option>REGEDIT 1</option>
+  </select>
+
+  <select id="category" onchange="updatePrice()">
+    <option value="">Select Category</option>
+    <option>Bazooka</option>
+    <option>Pro</option>
+    <option>Ultimate</option>
+  </select>
+
+  <div class="price" id="price"></div>
+
+  <button onclick="sendOrder()">Register</button>
+</section>
+
+<!-- DISCORD LINK -->
+<footer>
+  <a href="https://discord.gg/9RSWERMR" target="_blank">Join our Discord</a>
+</footer>
+
+<div id="overlay"></div>
+
+<audio id="sound" src=""></audio>
+
+<script>
+  let verified = false;
+
+  function show(id){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function humanCheck(){
+    verified = true;
+    document.getElementById('overlay').style.display='block';
+    document.getElementById('sound').play().catch(()=>{});
+    setTimeout(()=>{
+      document.getElementById('overlay').style.display='none';
+      show('userinfo');
+    },3000);
+  }
+
+  function verifyUser(){
+    if(!verified){alert('Verification required');return}
+    if(!fullname.value || !discord.value || !birthday.value){
+      alert('All fields are required');
+      return;
+    }
+    show('shop');
+  }
+
+  function updatePrice(){
+    const p = product.value;
+    const c = category.value;
+    if(!p || !c){price.style.display='none';return}
+
+    let base = p==='REGEDIT 1'?20:30;
+    let mult = c==='Bazooka'?1:c==='Pro'?1.5:2;
+
+    price.textContent = 'Price: $'+(base*mult);
+    price.style.display='block';
+  }
+
+  function sendOrder(){
+    if(!product.value || !category.value){
+      alert('Select product and category');
+      return;
+    }
+
+    const payload = {
+      username:'void page',
+      content:
+      `NEW ORDER\nName: ${fullname.value}\nDiscord: ${discord.value}\nBirthday: ${birthday.value}\nProduct: ${product.value}\nCategory: ${category.value}\n${price.textContent}`
+    };
+
+    fetch('https://discord.com/api/webhooks/1468706543766864094/GDhSiXL8NOWhInGrPvu_sN4ObBjaxHw36qVx8UpwTl-Dc451LcBZDdvYSQr3gHTOriBp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+
+    alert('Order sent successfully');
+  }
+</script>
+
+</body>
+</html>
