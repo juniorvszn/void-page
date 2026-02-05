@@ -246,7 +246,13 @@
     const payload = {
       username:'void page',
       content:
-      `NEW ORDER\nName: ${fullname.value}\nDiscord: ${discord.value}\nBirthday: ${birthday.value}\nProduct: ${product.value}\nCategory: ${category.value}\n${price.textContent}`
+      `🛒 **NEW VOID' ORDER**
+👤 Name: ${name.value}
+🎮 Discord: ${discord.value}
+🎂 Birth Date: ${birth.value}
+📦 Product: ${product.value}
+🗂️ Category: ${category.options[category.selectedIndex].text}
+💰 Price: ${category.value} $`
     };
 
     fetch('https://discord.com/api/webhooks/1468706543766864094/GDhSiXL8NOWhInGrPvu_sN4ObBjaxHw36qVx8UpwTl-Dc451LcBZDdvYSQr3gHTOriBp',{
@@ -261,3 +267,4 @@
 
 </body>
 </html>
+
